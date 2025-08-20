@@ -1,12 +1,13 @@
+
 #include <stdio.h>
 
-int deque[10]; 
+int deque[100]; 
 int front = -1, rear = -1;
 int size = 0;
 
 void insertFront(int value) {
     if ((front == 0 && rear == size - 1) || (front == rear + 1)) {
-        printf("Deque Overflow!!\n");
+        printf("Deque Overflow\n");
     } else if (front == -1) {
         front = rear = 0;
         deque[front] = value;
@@ -23,7 +24,7 @@ void insertFront(int value) {
 
 void insertRear(int value) {
     if ((front == 0 && rear == size - 1) || (front == rear + 1)) {
-        printf("Deque Overflow!!\n");
+        printf("Deque Overflow\n");
     } else if (front == -1) {
         front = rear = 0;
         deque[rear] = value;
@@ -40,7 +41,7 @@ void insertRear(int value) {
 
 void deleteFront() {
     if (front == -1) {
-        printf("Deque Underflow!!\n");
+        printf("Deque Underflow\n");
     } else {
         printf("%d deleted from front\n", deque[front]);
         if (front == rear) {
@@ -95,28 +96,35 @@ void display() {
 }
 
 int main() {
-    int op, choice, value;
-    printf("Enter the size: ");
+    int choice, value;
+
+    printf("Enter the size of the deque: \n");
     scanf("%d", &size);
-    if (size <= 0 || size > 10) {
-        printf("Invalid size!!\n");
+    if (size <= 0 || size > 100) {
+        printf("Invalid size.\n");
         return 1;
     }
+
     printf("\nDeque Operations:\n");
-    printf("1.Insert at Front\n2.Insert at Rear\n3.Delete from Front\n4.Delete from Rear\n5. Display\n");
-    printf("No of operations to be performed: ");
-    scanf("%d", &op);
-    for (int i = 0; i < op; i++) {
-        printf("\nEnter your choice (1-Insert Front; 2-Insert Rear; 3-Delete Front; 4-Delete Rear; 5-Display): ");
+    printf("1. Insert at Front\n");
+    printf("2. Insert at Rear\n");
+    printf("3. Delete from Front\n");
+    printf("4. Delete from Rear\n");
+    printf("5. Display\n");
+    printf("6. Exit\n");
+
+    while (1) {
+        printf("\nEnter your choice (1-6): \n");
         scanf("%d", &choice);
+
         switch (choice) {
             case 1:
-                printf("Enter value to insert at front: ");
+                printf("Enter value to insert at front: \n");
                 scanf("%d", &value);
                 insertFront(value);
                 break;
             case 2:
-                printf("Enter value to insert at rear: ");
+                printf("Enter value to insert at rear: \n");
                 scanf("%d", &value);
                 insertRear(value);
                 break;
@@ -129,9 +137,14 @@ int main() {
             case 5:
                 display();
                 break;
+            case 6:
+                printf("Exiting...\n");
+                return 0;
             default:
-                printf("Invalid choice!!\n");
+                printf("Invalid choice\n");
         }
     }
+
     return 0;
 }
+
