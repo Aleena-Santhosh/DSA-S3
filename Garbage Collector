@@ -71,7 +71,7 @@ void display_memory() {
         if (temp->is_free) {
             printf("Size: %4d | Free\n", temp->size);
         } else {
-            printf("Size: %4d | Used (Block #%d) Marked: %d\n", temp->size, index, temp->marked);
+            printf("Size: %4d | Used (Block #%d)\n", temp->size, index);
             index++;
         }
         temp = temp->next;
@@ -114,6 +114,50 @@ void coalesce() {
     }
 }
 
+void compact() {
+    Block* temp = head;
+    Block* last_alloc = NULL;
+    int free_size_sum = 0;
+
+    while (temp != NULL) {
+        if (temp->is_free) {
+            free_size_sum += temp->size;
+
+            Block* to_free = temp;
+            temp = temp->next;
+
+            if (to_free->prev != NULL)
+                to_free->prev->next = to_free->next;
+            else
+                head = to_free->next;
+
+            if (to_free->next != NULL)
+                to_free->next->prev = to_free->prev;
+
+            free(to_free);
+        } else {
+            last_alloc = temp;
+            temp = temp->next;
+        }
+    }
+
+    if (free_size_sum > 0) {
+        Block* free_block = (Block*)malloc(sizeof(Block));
+        free_block->size = free_size_sum;
+        free_block->is_free = true;
+        free_block->marked = false;
+        free_block->next = NULL;
+
+        if (last_alloc == NULL) {
+            free_block->prev = NULL;
+            head = free_block;
+        } else {
+            free_block->prev = last_alloc;
+            last_alloc->next = free_block;
+        }
+    }
+}
+
 void gc(int roots[], int root_count) {
     Block* temp;
     int index;
@@ -134,6 +178,7 @@ void gc(int roots[], int root_count) {
 
     sweep();
     coalesce();
+    compact();
 }
 
 int main() {
