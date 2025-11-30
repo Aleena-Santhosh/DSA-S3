@@ -1,30 +1,47 @@
 #include <stdio.h>
-void sortDescending(int arr[], int n) {
-    int temp;
-    for(int i = 0; i < n - 1; i++) {
-        for(int j = i + 1; j < n; j++) {
-            if(arr[i] < arr[j]) { 
-                temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
+
+int main() {
+    int n, k;
+
+    // Step 1: Read the number of total events
+    printf("Enter number of events: ");
+    scanf("%d", &n);
+
+    // Step 2: Create an array of size n to store activity points
+    int A[n];
+
+    // Step 3: Read the activity points for all n events
+    printf("Enter activity points: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &A[i]);
+    }
+
+    // Step 4: Read the maximum number of events you can participate in
+    printf("Enter max events you can participate: ");
+    scanf("%d", &k);
+
+    // Step 5: Sort the activity points in descending order using bubble sort
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (A[j] < A[j + 1]) {
+                int temp = A[j];
+                A[j] = A[j + 1];
+                A[j + 1] = temp;
             }
         }
     }
-}
-int main() {
-    int n, k;
-    printf("Enter number of events: ");
-    scanf("%d", &n);
-    int A[n];
-    printf("Enter activity points for each event:\n");
-    for(int i = 0; i < n; i++)
-        scanf("%d", &A[i]);
-    printf("Enter maximum number of events you can participate in: ");
-    scanf("%d", &k);
-    sortDescending(A, n);
-    int sum = 0;
-    for(int i = 0; i < k; i++)
-        sum += A[i];
-    printf("Maximum number of points you can earn: %d\n", sum);
+
+    // Step 6: Initialize maxPoints = 0
+    int maxPoints = 0;
+
+    // Step 7: Add the first k values from the sorted array to maxPoints
+    for (int i = 0; i < k && i < n; i++) {
+        maxPoints += A[i];
+    }
+
+    // Step 8: Display the value of maxPoints
+    printf("Maximum activity points: %d\n", maxPoints);
+
+    // Step 9: Stop
     return 0;
 }
