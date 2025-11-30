@@ -1,0 +1,148 @@
+#include <stdio.h>
+
+#define SIZE 100
+
+int steps_bubble = 0, steps_insertion = 0, steps_quick = 0, steps_merge = 0;
+
+void swap(int *a, int *b) {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+void bubbleSort(int a[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++, steps_bubble++) {
+            if (a[j] > a[j + 1])
+                swap(&a[j], &a[j + 1]);
+        }
+    }
+}
+
+void insertionSort(int a[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = a[i];
+        int j = i - 1;
+
+        while (j >= 0 && a[j] > key) {
+            a[j + 1] = a[j];
+            j--;
+            steps_insertion++;
+        }
+
+        steps_insertion++;
+        a[j + 1] = key;
+    }
+}
+
+int partition(int a[], int low, int high) {
+    int p = a[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++, steps_quick++) {
+        if (a[j] <= p) {
+            i++;
+            swap(&a[i], &a[j]);
+        }
+    }
+    swap(&a[i + 1], &a[high]);
+    return i + 1;
+}
+
+void quickSort(int a[], int low, int high) {
+    if (low < high) {
+        int pi = partition(a, low, high);
+        quickSort(a, low, pi - 1);
+        quickSort(a, pi + 1, high);
+    }
+}
+
+void merge(int a[], int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    int L[n1], R[n2];
+
+    for (int i = 0; i < n1; i++) L[i] = a[l + i];
+    for (int i = 0; i < n2; i++) R[i] = a[m + 1 + i];
+
+    int i = 0, j = 0, k = l;
+
+    while (i < n1 && j < n2) {
+        steps_merge++;
+        if (L[i] <= R[j])
+            a[k++] = L[i++];
+        else
+            a[k++] = R[j++];
+    }
+
+    while (i < n1)
+        a[k++] = L[i++];
+    while (j < n2)
+        a[k++] = R[j++];
+}
+
+void mergeSort(int a[], int l, int r) {
+    if (l < r) {
+        int m = (l + r) / 2;
+
+        mergeSort(a, l, m);
+        mergeSort(a, m + 1, r);
+        merge(a, l, m, r);
+    }
+}
+
+void copyArray(int src[], int dest[], int n) {
+    for (int i = 0; i < n; i++)
+        dest[i] = src[i];
+}
+
+void printArray(int a[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+
+int main() {
+    int original[SIZE], arr[SIZE], n;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++)
+        scanf("%d", &original[i]);
+
+    // Bubble Sort
+    copyArray(original, arr, n);
+    bubbleSort(arr, n);
+    printf("\nBubble Sort result: ");
+    printArray(arr, n);
+
+    // Insertion Sort
+    copyArray(original, arr, n);
+    insertionSort(arr, n);
+    printf("Insertion Sort result: ");
+    printArray(arr, n);
+
+    // Quick Sort
+    copyArray(original, arr, n);
+    quickSort(arr, 0, n - 1);
+    printf("Quick Sort result: ");
+    printArray(arr, n);
+
+    // Merge Sort
+    copyArray(original, arr, n);
+    mergeSort(arr, 0, n - 1);
+    printf("Merge Sort result: ");
+    printArray(arr, n);
+
+    // Print step counts
+    printf("\nNumber of steps:\n");
+    printf("Bubble Sort: %d\n", steps_bubble);
+    printf("Insertion Sort: %d\n", steps_insertion);
+    printf("Quick Sort: %d\n", steps_quick);
+    printf("Merge Sort: %d\n", steps_merge);
+
+    return 0;
+}
