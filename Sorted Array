@@ -1,75 +1,68 @@
 #include <stdio.h>
+#include <math.h>  // For log2() and ceil()
 
 int main() {
+    int n, key, low, high, mid, comparisons = 0, found = 0;
 
-int arr[100], n, key, low, high, mid, flag = 0, comparisons = 0;
+    // Step 1: Input number of elements
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
 
-printf("Enter number of elements: ");
+    int arr[n];
 
-scanf("%d", &n);
+    // Step 2: Input sorted elements
+    printf("Enter sorted elements:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
 
-printf("Enter elements in sorted order:\n");
+    // Step 3: Input element to search
+    printf("Enter element to search: ");
+    scanf("%d", &key);
 
-for (int i = 0; i < n; i++)
+    // Step 4: Initialize search boundaries
+    low = 0;
+    high = n - 1;
 
-scanf("%d", &arr[i]);
+    // Step 5: Binary Search loop
+    while (low <= high) {
+        mid = (low + high) / 2;
+        comparisons++;
 
-printf("Enter element to search: ");
+        if (arr[mid] == key) {
+            printf("Element %d found at position %d\n", key, mid + 1);
+            found = 1;
+            break;
+        } else if (key < arr[mid]) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
 
-scanf("%d", &key);
+    // Step 6: Result if not found
+    if (!found) {
+        printf("Element not found.\n");
+    }
 
-low = 0;
+    // Step 7: Time Complexity Analysis
+    printf("\nTIME COMPLEXITY ANALYSIS\n");
 
-high = n - 1;
+    if (comparisons == 1 && found) {
+        printf("Best Case: Element found in first comparison\n");
+        printf("Time Complexity: O(1)\n");
+    } else if (found) {
+        printf("Average Case: Element found after %d comparisons\n", comparisons);
+        printf("Time Complexity: O(log n)\n");
+    } else {
+        printf("Worst Case: Element not found after %d comparisons\n", comparisons);
+        printf("Time Complexity: O(log n)\n");
+    }
 
-while (low <= high) {
+    // Step 8: Print total comparisons and theoretical bound
+    printf("Total Comparisons Made: %d\n", comparisons);
+    printf("Theoretical Maximum Comparisons (⌈log2(n)⌉): %d\n", (int)ceil(log2(n)));
+    printf("Space Complexity: O(1)\n");
 
-mid = (low + high) / 2;
-
-comparisons++;
-
-if (arr[mid] == key) {
-
-printf("Element %d found at position %d.\n", key, mid + 1);
-
-flag = 1;
-
-break;
-
+    return 0;
 }
-
-else if (key < arr[mid])
-
-high = mid - 1;
-
-else
-
-low = mid + 1;
-
-}
-
-if (flag == 0)
-
-printf("Element not found.\n");
-printf("\n COMPLEXITY ANALYSIS\n");
-
-if (comparisons == 1)
-
-printf("Best Case: Element found at mid in first comparison → O(1)\n");
-
-else if (flag == 1)
-
-printf("Average Case: Element found after %d comparisons → O(log n)\n", comparisons);
-
-else
-
-printf("Worst Case: Element not found after %d comparisons → O(log n)\n", comparisons);
-
-printf("Total Comparisons Made: %d\n", comparisons);
-
-printf("Space Complexity: O(1)\n");
-
-return 0;
-
-}
-
